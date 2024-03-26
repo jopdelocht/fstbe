@@ -22,10 +22,7 @@ use App\Models\User;
 // });
 
 
-Route::get('/users', function () {
-  $users = DB::table('users')->get();
-  return response()->json($users);
-});
+
 
 // POST-method for inserting new registered user
 Route::post('/users', function (Request $request) {
