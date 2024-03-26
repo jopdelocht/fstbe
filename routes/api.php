@@ -27,14 +27,14 @@ Route::get('/users', function () {
   return response()->json($users);
 });
 
-//  POST-method for inserting new registered user
+// POST-method for inserting new registered user
 Route::post('/users', function (Request $request) {
   $validatedData = $request->validate([
     'name' => 'required|max:255|unique:users',
     'email' => 'required|email|unique:users',
     'password' => 'required',
   ]);
-  //   Upon creating a new entry in the user table => insert timestamp
+  // Upon creating a new entry in the user table => insert timestamp
   $user = User::create([
     'name' => $validatedData['name'],
     'email' => $validatedData['email'],
@@ -51,7 +51,8 @@ Route::post('/users', function (Request $request) {
   // Display message and return json for $token
   return response()->json(['id' => $user->id, 'token' => $token], 201);
 });
-// token routes
+
+// Token routes
 Route::post('/tokens/create', function (Request $request) {
   $userId = $request->user()->id;
   $user = User::find($userId);
