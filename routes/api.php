@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Http\Controllers\ChatController;
 
 
 /*
@@ -66,3 +67,5 @@ Route::post('/tokens/create', function (Request $request) {
   // Handle the case where the user is not found
   return response()->json(['error' => 'User not found'], 404);
 });
+
+Route::post('messages', [ChatController::class, 'message']);

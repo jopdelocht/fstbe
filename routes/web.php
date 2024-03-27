@@ -4,7 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CardController;
-
+use App\Http\Controllers\ChatController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,3 +23,5 @@ Route::get('/', function () {
 Route::get('/users', [UserController::class, 'getAllUsers']);
 
 Route::get('/regularcards', [CardController::class, 'getRegularCards']);
+
+
