@@ -68,4 +68,4 @@ Route::post('/tokens/create', function (Request $request) {
   return response()->json(['error' => 'User not found'], 404);
 });
 
-Route::post('messages', [ChatController::class, 'message']);
+Route::post('messages/', [ChatController::class, 'message']);

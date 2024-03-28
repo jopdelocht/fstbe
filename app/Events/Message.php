@@ -26,7 +26,7 @@ class Message implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return ['chat'];
+        return ['chateen', 'chattwee'];
     }
 
     public function broadcastAs(): string
