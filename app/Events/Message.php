@@ -15,7 +15,7 @@ class Message implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
 
-    public function __construct(public string $username, public string $message)
+    public function __construct(public string $username, public string $message, public string $room)
     {
     }
 
@@ -26,7 +26,11 @@ class Message implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return ['chateen', 'chattwee'];
+        if ($this->room == 'een') {
+            return ['chatChannelOne'];
+        } else if ($this->room == 'twee') {
+            return ['chatChannelTwo'];
+        }
     }
 
     public function broadcastAs(): string
