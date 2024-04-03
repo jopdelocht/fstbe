@@ -68,4 +68,34 @@ Route::post('/tokens/create', function (Request $request) {
   return response()->json(['error' => 'User not found'], 404);
 });
 
+
+// CHAT
 Route::post('messages/', [ChatController::class, 'message']);
+
+
+
+// POST-method for inserting new games
+Route::middleware('auth:sanctum')->post('/games', function (Request $request) {
+  $name = $request->name;
+  $setofcard_id = $request->setofcard_id;
+  $gamecode = $request->gamecode;
+
+  DB::insert('INSERT INTO games (name, setofcard_id, gamecode) VALUES (?, ?, ?)', [$name, $setofcard_id, $gamecode]);
+  return response()->json(['message' => 'added successfully'], 201);
+});
+
+// GET-method for retrieving all games
+Route::get('/games', function (Request $request) {
+  $result = DB::select("
+  SELECT 
+  games.id,
+  games.`name` AS gamename,
+  games.setofcard_id,
+  setofcards.name AS setofcardname,
+  games.gamecode
+  FROM games
+  LEFT JOIN setofcards 
+  ON setofcards.id = games.setofcard_id
+");
+  return response()->json($result, 200);
+});
