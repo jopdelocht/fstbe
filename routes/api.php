@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Http\Controllers\ChatController;
-
+use App\Http\Controllers\GameController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,6 +72,9 @@ Route::post('/tokens/create', function (Request $request) {
 // CHAT
 Route::post('messages/', [ChatController::class, 'message']);
 
+// SCORES
+Route::post('scores', [GameController::class, 'sendScore']);
+// misschien scores/
 
 
 // POST-method for inserting new games
