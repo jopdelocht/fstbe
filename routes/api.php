@@ -74,7 +74,9 @@ Route::post('messages/', [ChatController::class, 'message']);
 
 // SCORES
 Route::post('scores', [GameController::class, 'sendScore']);
-// misschien scores/
+
+// TASKS
+Route::post('tasks', [GameController::class, 'sendTask']);
 
 
 // POST-method for inserting new games
@@ -101,4 +103,28 @@ Route::get('/games', function (Request $request) {
   ON setofcards.id = games.setofcard_id
 ");
   return response()->json($result, 200);
+});
+
+
+// GET-method for retrieving a specific game by gamecode
+Route::get('/games/{gamecode}', function ($gamecode) {
+  $result = DB::select("
+  SELECT 
+  games.id,
+  games.`name` AS gamename,
+  games.setofcard_id,
+  setofcards.name AS setofcardname,
+  games.gamecode
+  FROM games
+  LEFT JOIN setofcards 
+  ON setofcards.id = games.setofcard_id
+  WHERE games.gamecode = ?
+  ", [$gamecode]);
+
+  // Check if the result is not empty
+  if (!empty($result)) {
+    return response()->json($result[0], 200); // Return the first (and only) record
+  } else {
+    return response()->json(['message' => 'Game not found'], 404); // Return a 404 if no game is found
+  }
 });
