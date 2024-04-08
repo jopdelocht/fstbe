@@ -11,6 +11,7 @@ class GameController extends Controller
     public function SendScore(Request $request)
     {
         event(new SendScore(
+            $request->input('userid'),
             $request->input('username'),
             $request->input('score'),
             $request->input('room')
