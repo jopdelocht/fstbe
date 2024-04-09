@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\sendScore;
 use App\Events\SendTask;
+use App\Events\JoinGame;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
@@ -24,6 +25,16 @@ class GameController extends Controller
     {
         event(new SendTask(
             $request->input('task'),
+            $request->input('room')
+        ));
+        return $request;
+    }
+
+    public function joinGame(Request $request)
+    {
+        event(new joinGame(
+            $request->input('userid'),
+            $request->input('username'),
             $request->input('room')
         ));
         return $request;
