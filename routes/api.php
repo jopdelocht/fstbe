@@ -6,25 +6,61 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\UserController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+// CHAT
+Route::post('messages/', [ChatController::class, 'message']);
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+// SCORES
+Route::post('scores', [GameController::class, 'sendScore']);
+
+// TASKS
+Route::post('tasks', [GameController::class, 'sendTask']);
+
+// PLAYERS WHO JOINED GAME
+Route::post('joingame', [GameController::class, 'joinGame']);
 
 
+// // USERS // //
 
+// GET all users
+Route::get('/users', [UserController::class, 'getAllUsers']);
 
+// GET-method for retrieving a specific user by userid
+Route::get('/users/{id}', function ($id) {
+  $result = DB::select("
+    SELECT 
+    users.`name` AS username,
+    users.role AS role,
+    users.gamecode AS gamecode,
+    games.`name` AS gamename,
+    games.setofcard_id AS soc_id,
+    sc.name AS socname
+  FROM 
+    users
+  LEFT JOIN 
+    games ON users.gamecode COLLATE utf8mb4_unicode_ci = games.gamecode COLLATE utf8mb4_unicode_ci
+  LEFT JOIN 
+    setofcards sc ON games.setofcard_id = sc.id
+  WHERE 
+    users.id = ?;
+  ", [$id]);
+
+  // Check if the result is not empty
+  if (!empty($result)) {
+    return response()->json($result[0], 200); // Return the first (and only) record
+  } else {
+    return response()->json(['message' => 'User not found'], 404); // Return a 404 if no game is found
+  }
+});
+
+// UPDATE users gamecode and role
+Route::patch('update-user-role-gamecode/{id}', [UserController::class, 'updateUserRoleAndGamecode']);
+
+// REMOVE users gamecode and role
+Route::patch('remove-user-role-gamecode/{id}', [UserController::class, 'removeUserRoleAndGamecode']);
+
+// REGISTER USER
 // POST-method for inserting new registered user
 Route::post('/users', function (Request $request) {
   $validatedData = $request->validate([
@@ -69,25 +105,8 @@ Route::post('/tokens/create', function (Request $request) {
 });
 
 
-// CHAT
-Route::post('messages/', [ChatController::class, 'message']);
 
-// SCORES
-Route::post('scores', [GameController::class, 'sendScore']);
-
-// TASKS
-Route::post('tasks', [GameController::class, 'sendTask']);
-
-
-// POST-method for inserting new games
-Route::middleware('auth:sanctum')->post('/games', function (Request $request) {
-  $name = $request->name;
-  $setofcard_id = $request->setofcard_id;
-  $gamecode = $request->gamecode;
-
-  DB::insert('INSERT INTO games (name, setofcard_id, gamecode) VALUES (?, ?, ?)', [$name, $setofcard_id, $gamecode]);
-  return response()->json(['message' => 'added successfully'], 201);
-});
+// // GAMES // //
 
 // GET-method for retrieving all games
 Route::get('/games', function (Request $request) {
@@ -105,8 +124,7 @@ Route::get('/games', function (Request $request) {
   return response()->json($result, 200);
 });
 
-
-// GET-method for retrieving a specific game by gamecode
+// GET-method for retrieving a specific game by gamecode 
 Route::get('/games/{gamecode}', function ($gamecode) {
   $result = DB::select("
   SELECT 
@@ -128,3 +146,31 @@ Route::get('/games/{gamecode}', function ($gamecode) {
     return response()->json(['message' => 'Game not found'], 404); // Return a 404 if no game is found
   }
 });
+
+// POST-method for inserting a new game
+Route::middleware('auth:sanctum')->post('/games', function (Request $request) {
+  $name = $request->name;
+  $setofcard_id = $request->setofcard_id;
+  $gamecode = $request->gamecode;
+
+  DB::insert('INSERT INTO games (name, setofcard_id, gamecode) VALUES (?, ?, ?)', [$name, $setofcard_id, $gamecode]);
+  return response()->json(['message' => 'added successfully'], 201);
+});
+
+
+
+
+
+// SELECT 
+//     users.`name` AS username,
+//     users.role AS role,
+//     users.gamecode AS gamecode,
+//     games.`name` AS gamename,
+//     games.setofcard_id AS soc_id,
+//     sc.name AS socname
+// FROM 
+//     users
+// JOIN 
+//     games ON users.gamecode COLLATE utf8mb4_unicode_ci = games.gamecode COLLATE utf8mb4_unicode_ci
+// JOIN 
+//     setofcards sc ON games.setofcard_id = sc.id;
