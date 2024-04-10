@@ -17,9 +17,6 @@ Route::post('scores', [GameController::class, 'sendScore']);
 // TASKS
 Route::post('tasks', [GameController::class, 'sendTask']);
 
-// PLAYERS WHO JOINED GAME
-Route::post('joingame', [GameController::class, 'joinGame']);
-
 
 // // USERS // //
 
@@ -59,6 +56,22 @@ Route::patch('update-user-role-gamecode/{id}', [UserController::class, 'updateUs
 
 // REMOVE users gamecode and role
 Route::patch('remove-user-role-gamecode/{id}', [UserController::class, 'removeUserRoleAndGamecode']);
+
+
+// JOINED PLAYERS ARRAY //
+
+// NgOnInit (GET)
+// GET users by gamecode
+Route::get('/users-by-gamecode/{gamecode}', [UserController::class, 'getUsersByGamecode']);
+
+// Pusher API (POST & DELETE)
+// PLAYERS WHO JOINED GAME 
+Route::patch('joingame', [GameController::class, 'joinGame']);
+// PLAYERS WHO LEFT GAME
+Route::patch('leavegame', [GameController::class, 'leaveGame']);
+
+
+
 
 // REGISTER USER
 // POST-method for inserting new registered user

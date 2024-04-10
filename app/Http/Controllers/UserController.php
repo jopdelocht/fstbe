@@ -36,4 +36,17 @@ class UserController extends Controller
         ]);
         return response()->json(['message' => 'User role and gamecode removed successfully'], 200);
     }
+
+    public function getUsersByGamecode($gamecode)
+    {
+        $users = DB::table('users')
+            ->where('gamecode', $gamecode)
+            ->select(
+                DB::raw('id as userid'),
+                DB::raw('name as username'),
+                'gamecode'
+            )
+            ->get();
+        return response()->json($users);
+    }
 }

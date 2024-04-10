@@ -10,18 +10,22 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class JoinGame implements ShouldBroadcast
+
+class LeaveGame implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /**
+     * Create a new event instance.
+     */
 
     public function __construct(
         public int $userid,
-        public string $username,
         public string $gamecode
     ) {
-        //
     }
+
+
     public function broadcastOn(): array
     {
         return [$this->gamecode];
@@ -29,6 +33,6 @@ class JoinGame implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return 'joinedgame';
+        return 'leftgame';
     }
 }
