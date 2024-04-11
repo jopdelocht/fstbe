@@ -52,10 +52,12 @@ Route::get('/users/{id}', function ($id) {
 });
 
 // UPDATE users gamecode and role
-Route::patch('update-user-role-gamecode/{id}', [UserController::class, 'updateUserRoleAndGamecode']);
+Route::patch('joingameupdatedatabase/{id}', [UserController::class, 'updateUserRoleAndGamecode']);
+Route::patch('joingameupdatepusher', [GameController::class, 'joinGame']);
 
 // REMOVE users gamecode and role
-Route::patch('remove-user-role-gamecode/{id}', [UserController::class, 'removeUserRoleAndGamecode']);
+Route::patch('leavegameupdatedatabase/{id}', [UserController::class, 'removeUserRoleAndGamecode']);
+Route::patch('leavegameupdatepusher', [GameController::class, 'leaveGame']);
 
 
 // JOINED PLAYERS ARRAY //
@@ -63,14 +65,6 @@ Route::patch('remove-user-role-gamecode/{id}', [UserController::class, 'removeUs
 // NgOnInit (GET)
 // GET users by gamecode
 Route::get('/users-by-gamecode/{gamecode}', [UserController::class, 'getUsersByGamecode']);
-
-// Pusher API (POST & DELETE)
-// PLAYERS WHO JOINED GAME 
-Route::patch('joingame', [GameController::class, 'joinGame']);
-// PLAYERS WHO LEFT GAME
-Route::patch('leavegame', [GameController::class, 'leaveGame']);
-
-
 
 
 // REGISTER USER
