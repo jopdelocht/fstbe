@@ -13,28 +13,35 @@ class UserController extends Controller
         return response()->json($users);
     }
 
-    // public function getUserById($id)
-    // {
-    //     $user = DB::table('users')->where('id', $id)->first();
-    //     return response()->json($user);
-    // }
-
-    public function updateUserRoleAndGamecode($id, Request $request)
+    // database logic when a player joins a NEW game
+    public function setRoleGameCodeScoreDB($id, Request $request)
     {
         DB::table('users')->where('id', $id)->update([
             'role' => $request->input('role'),
-            'gamecode' => $request->input('gamecode')
+            'gamecode' => $request->input('gamecode'),
+            'score' => NULL
         ]);
-        return response()->json(['message' => 'User role and gamecode updated successfully'], 200);
+        return response()->json(['message' => 'User role, gamecode and score updated successfully'], 200);
     }
 
-    public function removeUserRoleAndGamecode($id)
+    // database logic when a player leaves a game
+    public function removeRoleGameCodeScoreDB($id)
     {
         DB::table('users')->where('id', $id)->update([
             'role' => NULL,
-            'gamecode' => NULL
+            'gamecode' => NULL,
+            'score' => NULL
         ]);
-        return response()->json(['message' => 'User role and gamecode removed successfully'], 200);
+        return response()->json(['message' => 'User role, gamecode and score removed successfully'], 200);
+    }
+
+    // database logic when a player sets a new score
+    public function sendScoreDB($id, Request $request)
+    {
+        DB::table('users')->where('id', $id)->update([
+            'score' => $request->input('score')
+        ]);
+        return response()->json(['message' => 'User score updated successfully'], 200);
     }
 
     public function getUsersByGamecode($gamecode)
@@ -44,7 +51,9 @@ class UserController extends Controller
             ->select(
                 DB::raw('id as userid'),
                 DB::raw('name as username'),
-                'gamecode'
+                'gamecode',
+                'role',
+                'score'
             )
             ->get();
         return response()->json($users);

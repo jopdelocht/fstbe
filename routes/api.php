@@ -11,8 +11,6 @@ use App\Http\Controllers\UserController;
 // CHAT
 Route::post('messages/', [ChatController::class, 'message']);
 
-// SCORES
-Route::post('scores', [GameController::class, 'sendScore']);
 
 // TASKS
 Route::post('tasks', [GameController::class, 'sendTask']);
@@ -52,12 +50,16 @@ Route::get('/users/{id}', function ($id) {
 });
 
 // UPDATE users gamecode and role
-Route::patch('joingameupdatedatabase/{id}', [UserController::class, 'updateUserRoleAndGamecode']);
+Route::patch('joingameupdatedatabase/{id}', [UserController::class, 'setRoleGameCodeScoreDB']);
 Route::patch('joingameupdatepusher', [GameController::class, 'joinGame']);
 
 // REMOVE users gamecode and role
-Route::patch('leavegameupdatedatabase/{id}', [UserController::class, 'removeUserRoleAndGamecode']);
+Route::patch('leavegameupdatedatabase/{id}', [UserController::class, 'removeRoleGameCodeScoreDB']);
 Route::patch('leavegameupdatepusher', [GameController::class, 'leaveGame']);
+
+// UPDATE users score
+Route::patch('setscoreupdatedatabase/{id}', [UserController::class, 'sendScoreDB']);
+Route::patch('setscoreupdatepusher', [GameController::class, 'sendScore']);
 
 
 // JOINED PLAYERS ARRAY //

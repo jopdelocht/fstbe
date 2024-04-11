@@ -16,9 +16,8 @@ class SendScore implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
-        public string $userid,
-        public string $username,
-        public string $score,
+        public int $userid,
+        public int $score,
         public string $room
     ) {
     }

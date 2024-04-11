@@ -15,22 +15,20 @@ class LeaveGame implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     */
-
+    // determine which user to be deleted
     public function __construct(
         public int $userid,
         public string $gamecode
     ) {
     }
 
-
+    // determine which channel to broadcast on
     public function broadcastOn(): array
     {
         return [$this->gamecode];
     }
 
+    // determine which event to broadcast as
     public function broadcastAs(): string
     {
         return 'leftgame';

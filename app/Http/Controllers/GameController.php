@@ -10,11 +10,10 @@ use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function SendScore(Request $request)
+    public function sendScore(Request $request)
     {
         event(new SendScore(
             $request->input('userid'),
-            $request->input('username'),
             $request->input('score'),
             $request->input('room')
         ));
@@ -31,17 +30,24 @@ class GameController extends Controller
         return $request;
     }
 
+    // create user in pusher array
     public function joinGame(Request $request)
     {
+        // Set the score to NULL explicitly
+        $score = NULL;
+
         event(new JoinGame(
             $request->input('userid'),
             $request->input('username'),
-            $request->input('room')
+            $request->input('room'),
+            $request->input('role'),
+            $score // Pass NULL as the score
         ));
+
         return $request;
     }
 
-
+    // delete user from pusher array by id, and room
     public function leaveGame(Request $request)
     {
         event(new LeaveGame(
