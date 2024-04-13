@@ -19,7 +19,8 @@ class UserController extends Controller
         DB::table('users')->where('id', $id)->update([
             'role' => $request->input('role'),
             'gamecode' => $request->input('gamecode'),
-            'score' => NULL
+            'score' => NULL,
+            'displayscore' => 0
         ]);
         return response()->json(['message' => 'User role, gamecode and score updated successfully'], 200);
     }
@@ -30,7 +31,8 @@ class UserController extends Controller
         DB::table('users')->where('id', $id)->update([
             'role' => NULL,
             'gamecode' => NULL,
-            'score' => NULL
+            'score' => NULL,
+            'displayscore' => 0
         ]);
         return response()->json(['message' => 'User role, gamecode and score removed successfully'], 200);
     }
@@ -44,6 +46,31 @@ class UserController extends Controller
         return response()->json(['message' => 'User score updated successfully'], 200);
     }
 
+    // database logic to set displayscore to 1 according to gamecode
+    public function displayScoreDB($gamecode)
+    {
+        // Check if there are any users with the given gamecode and a non-null score
+        $usersWithScore = DB::table('users')
+            ->where('gamecode', $gamecode)
+            ->whereNotNull('score') // Add this line to check for non-null scores
+            ->exists();
+
+        // If there are users with a non-null score, update their displayscore to 1
+        if ($usersWithScore) {
+            DB::table('users')
+                ->where('gamecode', $gamecode)
+                ->whereNotNull('score') // Ensure the condition is applied here as well
+                ->update([
+                    'displayscore' => 1
+                ]);
+            return response()->json(['message' => 'All displayscores updated successfully to 1'], 200);
+        } else {
+            // Handle the case where no users with a non-null score were found
+            return response()->json(['message' => 'No users with a non-null score found for the given gamecode'], 404);
+        }
+    }
+
+
     public function getUsersByGamecode($gamecode)
     {
         $users = DB::table('users')
@@ -53,7 +80,8 @@ class UserController extends Controller
                 DB::raw('name as username'),
                 'gamecode',
                 'role',
-                'score'
+                'score',
+                'displayscore'
             )
             ->get();
         return response()->json($users);

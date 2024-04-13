@@ -10,29 +10,23 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class JoinGame implements ShouldBroadcast
+class DisplayScore implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    // user object creation in pusher array
+
     public function __construct(
-        public int $userid,
-        public string $username,
-        public string $gamecode,
-        public string $role,
-        public ?int $score,
-        public int $displayscore
+        public string $room
     ) {
     }
-    // determine which channel to broadcast on
+
     public function broadcastOn(): array
     {
-        return [$this->gamecode];
+        return [$this->room];
     }
 
-    // determine which event to broadcast as
     public function broadcastAs(): string
     {
-        return 'joinedgame';
+        return 'displayscore';
     }
 }

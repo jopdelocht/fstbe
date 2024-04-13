@@ -49,7 +49,7 @@ Route::get('/users/{id}', function ($id) {
   }
 });
 
-// UPDATE users gamecode and role
+// UPDATE users gamecode, role, score (and displayscore)
 Route::patch('joingameupdatedatabase/{id}', [UserController::class, 'setRoleGameCodeScoreDB']);
 Route::patch('joingameupdatepusher', [GameController::class, 'joinGame']);
 
@@ -60,6 +60,10 @@ Route::patch('leavegameupdatepusher', [GameController::class, 'leaveGame']);
 // UPDATE users score
 Route::patch('setscoreupdatedatabase/{id}', [UserController::class, 'sendScoreDB']);
 Route::patch('setscoreupdatepusher', [GameController::class, 'sendScore']);
+
+// DISPLAY SCORE
+Route::patch('displayscoreupdatedatabase/{gamecode}', [UserController::class, 'displayScoreDB']);
+Route::patch('displayscoreupdatepusher', [GameController::class, 'displayScore']);
 
 
 // JOINED PLAYERS ARRAY //
