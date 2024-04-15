@@ -12,7 +12,7 @@ class ChatController extends Controller
         event(new Message(
             $request->input('username'),
             $request->input('message'),
-            $request->input('room')
+            $request->input('gamecode')
         ));
         return [];
     }

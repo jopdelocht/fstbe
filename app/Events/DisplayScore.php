@@ -16,13 +16,13 @@ class DisplayScore implements ShouldBroadcast
 
 
     public function __construct(
-        public string $room
+        public string $gamecode
     ) {
     }
 
     public function broadcastOn(): array
     {
-        return [$this->room];
+        return [$this->gamecode];
     }
 
     public function broadcastAs(): string

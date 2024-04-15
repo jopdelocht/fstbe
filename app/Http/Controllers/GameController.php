@@ -21,7 +21,7 @@ class GameController extends Controller
         event(new JoinGame(
             $request->input('userid'),
             $request->input('username'),
-            $request->input('room'),
+            $request->input('gamecode'),
             $request->input('role'),
             $score, // Pass NULL as the score
             $displayscore
@@ -30,12 +30,12 @@ class GameController extends Controller
         return $request;
     }
 
-    // delete user from pusher array by id, and room
+    // delete user from pusher array by id, and gamecode
     public function leaveGame(Request $request)
     {
         event(new LeaveGame(
             $request->input('userid'),
-            $request->input('room')
+            $request->input('gamecode')
         ));
         return $request;
     }
@@ -45,17 +45,7 @@ class GameController extends Controller
         event(new SendScore(
             $request->input('userid'),
             $request->input('score'),
-            $request->input('room')
-        ));
-        return $request;
-    }
-
-
-    public function sendTask(Request $request)
-    {
-        event(new SendTask(
-            $request->input('task'),
-            $request->input('room')
+            $request->input('gamecode')
         ));
         return $request;
     }
@@ -63,7 +53,7 @@ class GameController extends Controller
     public function displayScore(Request $request)
     {
         event(new DisplayScore(
-            $request->input('room')
+            $request->input('gamecode')
         ));
         return $request;
     }

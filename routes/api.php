@@ -6,15 +6,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 
 // CHAT
 Route::post('messages/', [ChatController::class, 'message']);
-
-
-// TASKS
-Route::post('tasks', [GameController::class, 'sendTask']);
-
 
 // // USERS // //
 
@@ -64,6 +60,38 @@ Route::patch('setscoreupdatepusher', [GameController::class, 'sendScore']);
 // DISPLAY SCORE
 Route::patch('displayscoreupdatedatabase/{gamecode}', [UserController::class, 'displayScoreDB']);
 Route::patch('displayscoreupdatepusher', [GameController::class, 'displayScore']);
+
+
+// TASKS
+// GET all tasks
+Route::get('tasks-by-gamecode/{gamecode}', [TaskController::class, 'getTasksByGamecode']);
+
+
+// TASKS (Create a NEW task)
+// (database)
+Route::middleware('auth:sanctum')->post('createtaskupdatedatabase', function (Request $request) {
+  $tasktitle = $request->tasktitle;
+  $taskdescription = $request->taskdescription;
+  $gamecode = $request->gamecode;
+
+  // Using insertGetId to get the last inserted ID
+  $taskId = DB::table('tasks')->insertGetId([
+    'title' => $tasktitle,
+    'description' => $taskdescription,
+    'gamecode' => $gamecode
+  ]);
+
+  return response()->json(['message' => 'task added successfully into database', 'taskId' => $taskId], 201);
+});
+
+// (pusher)
+Route::post('createtaskupdatepusher', [TaskController::class, 'createTask']);
+
+// Update task's scores
+// (database)
+Route::patch('settaskscoreupdatedatabase/{id}', [TaskController::class, 'setTaskScoreDB']);
+// (pusher)
+Route::patch('settaskscoreupdatepusher', [TaskController::class, 'setTaskScore']);
 
 
 // JOINED PLAYERS ARRAY //

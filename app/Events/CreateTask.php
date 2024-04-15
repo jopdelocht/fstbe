@@ -10,31 +10,28 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class Message implements ShouldBroadcast
+class CreateTask implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
-    public function __construct(public string $username, public string $message, public string $gamecode)
-    {
+    public function __construct(
+        public string $tasktitle,
+        public string $taskdescription,
+        public string $gamecode,
+        public ?int $averagescore,
+        public ?int $lowestscore,
+        public ?int $highestscore,
+        public int $taskid // Add the task ID parameter
+    ) {
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
     public function broadcastOn(): array
     {
-        if ($this->gamecode == 'een') {
-            return ['chatChannelOne'];
-        } else if ($this->gamecode == 'twee') {
-            return ['chatChannelTwo'];
-        }
+        return [$this->gamecode];
     }
 
     public function broadcastAs(): string
     {
-        return 'message';
+        return 'createtask';
     }
 }

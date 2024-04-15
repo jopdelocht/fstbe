@@ -18,13 +18,13 @@ class SendScore implements ShouldBroadcast
     public function __construct(
         public int $userid,
         public int $score,
-        public string $room
+        public string $gamecode
     ) {
     }
 
     public function broadcastOn(): array
     {
-        return [$this->room];
+        return [$this->gamecode];
     }
 
     public function broadcastAs(): string
