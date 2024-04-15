@@ -7,6 +7,7 @@ use App\Events\SendTask;
 use App\Events\JoinGame;
 use App\Events\LeaveGame;
 use App\Events\DisplayScore;
+use App\Events\ResetScore;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
@@ -53,6 +54,14 @@ class GameController extends Controller
     public function displayScore(Request $request)
     {
         event(new DisplayScore(
+            $request->input('gamecode')
+        ));
+        return $request;
+    }
+
+    public function resetScore(Request $request)
+    {
+        event(new ResetScore(
             $request->input('gamecode')
         ));
         return $request;

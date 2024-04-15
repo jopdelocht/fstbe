@@ -61,6 +61,10 @@ Route::patch('setscoreupdatepusher', [GameController::class, 'sendScore']);
 Route::patch('displayscoreupdatedatabase/{gamecode}', [UserController::class, 'displayScoreDB']);
 Route::patch('displayscoreupdatepusher', [GameController::class, 'displayScore']);
 
+// RESET SCORE
+Route::patch('resetscoreupdatedatabase/{gamecode}', [UserController::class, 'resetScoreDB']);
+Route::patch('resetscoreupdatpusher', [GameController::class, 'resetScore']);
+
 
 // TASKS
 // GET all tasks

@@ -70,6 +70,17 @@ class UserController extends Controller
         }
     }
 
+    // database logic to set displayscore to 1 according to gamecode
+    public function resetScoreDB($gamecode)
+    {
+        DB::table('users')
+            ->where('gamecode', $gamecode)
+            ->update([
+                'displayscore' => 0,
+                'score' => NULL
+            ]);
+        return response()->json(['message' => 'All scores and displayscores reset to 0 or null'], 200);
+    }
 
     public function getUsersByGamecode($gamecode)
     {
