@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ResetScore;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -63,6 +64,11 @@ class UserController extends Controller
                 ->update([
                     'displayscore' => 1
                 ]);
+            DB::table('tasks')
+                ->where('gamecode', $gamecode)
+                ->update([
+                    'displayscore' => 1
+                ]);
             return response()->json(['message' => 'All displayscores updated successfully to 1'], 200);
         } else {
             // Handle the case where no users with a non-null score were found
@@ -78,6 +84,11 @@ class UserController extends Controller
             ->update([
                 'displayscore' => 0,
                 'score' => NULL
+            ]);
+        DB::table('tasks')
+            ->where('gamecode', $gamecode)
+            ->update([
+                'displayscore' => 0
             ]);
         return response()->json(['message' => 'All scores and displayscores reset to 0 or null'], 200);
     }
@@ -96,5 +107,23 @@ class UserController extends Controller
             )
             ->get();
         return response()->json($users);
+    }
+
+    public function createTaskDB(Request $request)
+    {
+        $tasktitle = $request->tasktitle;
+        $taskdescription = $request->taskdescription;
+        $gamecode = $request->gamecode;
+
+        $this->resetScoreDB($gamecode);
+
+        // Using insertGetId to get the last inserted ID
+        $taskId = DB::table('tasks')->insertGetId([
+            'title' => $tasktitle,
+            'description' => $taskdescription,
+            'gamecode' => $gamecode
+        ]);
+
+        return response()->json(['message' => 'task added successfully into database', 'taskId' => $taskId], 201);
     }
 }

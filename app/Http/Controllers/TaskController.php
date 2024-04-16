@@ -21,7 +21,8 @@ class TaskController extends Controller
                 'gamecode',
                 'averagescore',
                 'lowestscore',
-                'highestscore'
+                'highestscore',
+                'displayscore'
             )
             ->get();
         return response()->json($tasks);
@@ -33,6 +34,7 @@ class TaskController extends Controller
         $averagescore = NULL;
         $lowestscore = NULL;
         $highestscore = NULL;
+        $displayscore = 0;
 
         event(new CreateTask(
             $request->input('tasktitle'),
@@ -41,7 +43,8 @@ class TaskController extends Controller
             $averagescore,
             $lowestscore,
             $highestscore,
-            $taskid // Include the task ID in the event
+            $taskid, // Include the task ID in the event
+            $displayscore
         ));
         return $request;
     }

@@ -70,24 +70,11 @@ Route::patch('resetscoreupdatpusher', [GameController::class, 'resetScore']);
 // GET all tasks
 Route::get('tasks-by-gamecode/{gamecode}', [TaskController::class, 'getTasksByGamecode']);
 
-
-// TASKS (Create a NEW task)
+// TASKS (Create a NEW task v2)
 // (database)
-Route::middleware('auth:sanctum')->post('createtaskupdatedatabase', function (Request $request) {
-  $tasktitle = $request->tasktitle;
-  $taskdescription = $request->taskdescription;
-  $gamecode = $request->gamecode;
-
-  // Using insertGetId to get the last inserted ID
-  $taskId = DB::table('tasks')->insertGetId([
-    'title' => $tasktitle,
-    'description' => $taskdescription,
-    'gamecode' => $gamecode
-  ]);
-
-  return response()->json(['message' => 'task added successfully into database', 'taskId' => $taskId], 201);
+Route::middleware('auth:sanctum')->group(function () {
+  Route::post('createtaskupdatedatabase', [UserController::class, 'createTaskDB']);
 });
-
 // (pusher)
 Route::post('createtaskupdatepusher', [TaskController::class, 'createTask']);
 
